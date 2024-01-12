@@ -1,8 +1,9 @@
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
+use csv::Error;
 
-fn main() {
+fn main() -> Result<(), Error> {
     // Get file name from the command line arguments
     println!("Hello, world!");
 
@@ -22,6 +23,20 @@ fn main() {
         Err(why) => panic!("couldn't read {}: {}", display, why),
         Ok(_) => print!("{} contents\n{}", display, s)
     };
+
+    let mut reader = csv::Reader::from_reader(s.as_bytes());
+    for record in reader.records() {
+        let record = record?;
+        println!(
+            "A: {}, B: {}, C: {}, D: {}",
+            &record[0],
+            &record[1],
+            &record[2],
+            &record[3]
+        )
+    }
+
+    Ok(())
 
     // Read in first line to get existing order
 
